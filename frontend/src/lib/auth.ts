@@ -44,10 +44,11 @@ export async function login(
 ): Promise<{ ok: boolean; msg?: string; sesion?: Sesion }> {
   const uname = username.toLowerCase().trim();
 
+  const esEmail = uname.includes('@');
   const { data, error } = await supabase
     .from('perfiles')
     .select('id, username, password_hash, rol, nombre')
-    .eq('username', uname)
+    .eq(esEmail ? 'email_recuperacion' : 'username', uname)
     .single();
 
   if (error || !data) return { ok: false, msg: 'Usuario no encontrado.' };

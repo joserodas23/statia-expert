@@ -53,11 +53,11 @@ export default function Login() {
         <form onSubmit={ingresar}>
           <div style={{ marginBottom: 14 }}>
             <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              Usuario
+              Usuario o correo
             </div>
             <input
               style={inp} type="text" autoComplete="username"
-              placeholder="tu_usuario"
+              placeholder="tu_usuario o tu@correo.com"
               value={usuario} onChange={e => setUsuario(e.target.value)}
             />
           </div>
@@ -95,7 +95,7 @@ export default function Login() {
         </form>
 
         <div style={{ marginTop: 24, textAlign: 'center', fontSize: 11, color: 'rgba(255,255,255,0.2)' }}>
-          Usa tu usuario y contraseña de Statia Go
+          Usa tu cuenta de Statia Go
         </div>
       </div>
     </div>
