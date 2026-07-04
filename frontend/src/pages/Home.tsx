@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { User } from '@supabase/supabase-js';
-import { supabase } from '../lib/supabase';
+import type { Sesion } from '../lib/auth';
 import { useStore } from '../store/useStore';
 
 const MOTORES = [
@@ -528,10 +527,9 @@ const EJEMPLOS = [
   },
 ];
 
-export default function Home({ usuario }: { usuario: User }) {
+export default function Home({ usuario, onCerrarSesion }: { usuario: Sesion; onCerrarSesion: () => void }) {
   const navigate = useNavigate();
   const { addModelo, setModeloActual, modelos } = useStore();
-  const cerrarSesion = () => supabase.auth.signOut();
   const [modal, setModal] = useState(false);
   const [form, setForm] = useState({ nombre: '', descripcion: '', tipo_motor: 'crisp' as any, dominio: '' });
   const [errorNombre, setErrorNombre] = useState(false);
@@ -572,8 +570,8 @@ export default function Home({ usuario }: { usuario: User }) {
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)' }}>{usuario.email}</span>
-            <button onClick={cerrarSesion}
+            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)' }}>@{usuario.username}</span>
+            <button onClick={onCerrarSesion}
               style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)',
                        color: 'rgba(255,255,255,0.4)', borderRadius: 8, padding: '7px 13px',
                        cursor: 'pointer', fontSize: 11 }}>

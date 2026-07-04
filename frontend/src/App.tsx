@@ -1,28 +1,30 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import type { User } from '@supabase/supabase-js';
-import { supabase } from './lib/supabase';
+import { getSesion, clearSesion } from './lib/auth';
+import type { Sesion } from './lib/auth';
 import Home   from './pages/Home';
 import Editor from './pages/Editor';
 import Login  from './pages/Login';
 
 export default function App() {
-  const [usuario, setUsuario]  = useState<User | null>(null);
-  const [cargando, setCargando] = useState(true);
+  const [sesion, setSesion] = useState<Sesion | null>(null);
+  const [listo,  setListo]  = useState(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setUsuario(data.session?.user ?? null);
-      setCargando(false);
-    });
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_ev, session) => {
-      setUsuario(session?.user ?? null);
-    });
-    return () => subscription.unsubscribe();
+    setSesion(getSesion());
+    setListo(true);
+
+    // Sincronizar entre pestañas
+    const onStorage = () => setSesion(getSesion());
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
   }, []);
 
-  if (cargando) return (
-    <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0d0f14', color: 'rgba(255,255,255,0.2)', fontSize: 13 }}>
+  const cerrarSesion = () => { clearSesion(); setSesion(null); };
+
+  if (!listo) return (
+    <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  background: '#0d0f14', color: 'rgba(255,255,255,0.2)', fontSize: 13 }}>
       🧠 Cargando…
     </div>
   );
@@ -30,9 +32,9 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={usuario ? <Navigate to="/" replace /> : <Login />} />
-        <Route path="/"       element={usuario ? <Home usuario={usuario} />   : <Navigate to="/login" replace />} />
-        <Route path="/editor" element={usuario ? <Editor usuario={usuario} /> : <Navigate to="/login" replace />} />
+        <Route path="/login" element={sesion ? <Navigate to="/" replace /> : <Login />} />
+        <Route path="/"       element={sesion ? <Home   usuario={sesion} onCerrarSesion={cerrarSesion} /> : <Navigate to="/login" replace />} />
+        <Route path="/editor" element={sesion ? <Editor usuario={sesion} onCerrarSesion={cerrarSesion} /> : <Navigate to="/login" replace />} />
         <Route path="*"       element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

@@ -11,8 +11,7 @@ import RuleNode         from '../components/nodes/RuleNode';
 import OutputNode       from '../components/nodes/OutputNode';
 import IntermediateNode from '../components/nodes/IntermediateNode';
 import { useStore } from '../store/useStore';
-import type { User } from '@supabase/supabase-js';
-import { supabase } from '../lib/supabase';
+import type { Sesion } from '../lib/auth';
 import { inferirCrispApi, inferirFuzzyApi, inferirBayesianoApi } from '../api';
 
 const nodeTypes = { variable: VariableNode, regla: RuleNode, output: OutputNode, intermedio: IntermediateNode };
@@ -98,7 +97,7 @@ function inferirCapas(
   return { intermedios, resultados, firedByLayer };
 }
 
-export default function Editor({ usuario }: { usuario: User }) {
+export default function Editor({ usuario, onCerrarSesion }: { usuario: Sesion; onCerrarSesion: () => void }) {
   const { modeloActual, nodes, edges, onNodesChange, onEdgesChange, onConnect,
           setNodes, setEdges, resultados, setResultados } = useStore();
   const [hechos, setHechosState] = useState<Record<string, string>>(() => (modeloActual as any)?.hechos_ejemplo ?? {});
@@ -423,8 +422,8 @@ export default function Editor({ usuario }: { usuario: User }) {
         )}
 
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 8, alignItems: 'center' }}>
-          <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.2)' }}>{usuario.email}</span>
-          <button onClick={() => supabase.auth.signOut()} title="Cerrar sesión"
+          <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.2)' }}>@{usuario.username}</span>
+          <button onClick={onCerrarSesion} title="Cerrar sesión"
             style={{ fontSize: 11, padding: '5px 10px', borderRadius: 8, cursor: 'pointer',
                      background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)',
                      color: 'rgba(255,255,255,0.35)' }}>Salir</button>

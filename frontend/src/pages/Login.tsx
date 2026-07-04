@@ -1,22 +1,24 @@
-// Pantalla de login — mismas credenciales que Statia Go
+// Pantalla de login — mismas credenciales que Statia Go (tabla perfiles)
 // by Jose Rodas
 import { useState } from 'react';
-import { supabase } from '../lib/supabase';
+import { login } from '../lib/auth';
 
 export default function Login() {
-  const [email,    setEmail]    = useState('');
+  const [usuario,  setUsuario]  = useState('');
   const [password, setPassword] = useState('');
   const [error,    setError]    = useState('');
   const [cargando, setCargando] = useState(false);
 
-  const ingresar = async (e: React.FormEvent) => {
+  const ingresar = async (e: { preventDefault(): void }) => {
     e.preventDefault();
-    if (!email || !password) return;
+    if (!usuario || !password) return;
     setCargando(true);
     setError('');
-    const { error: err } = await supabase.auth.signInWithPassword({ email, password });
-    if (err) setError('Correo o contraseña incorrectos.');
+    const res = await login(usuario, password);
+    if (!res.ok) setError(res.msg ?? 'Error al ingresar.');
     setCargando(false);
+    // Si res.ok → App.tsx detecta la sesión en localStorage automáticamente
+    if (res.ok) window.location.reload();
   };
 
   const inp: React.CSSProperties = {
@@ -51,12 +53,12 @@ export default function Login() {
         <form onSubmit={ingresar}>
           <div style={{ marginBottom: 14 }}>
             <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-              Correo
+              Usuario
             </div>
             <input
-              style={inp} type="email" autoComplete="email"
-              placeholder="tu@correo.com"
-              value={email} onChange={e => setEmail(e.target.value)}
+              style={inp} type="text" autoComplete="username"
+              placeholder="tu_usuario"
+              value={usuario} onChange={e => setUsuario(e.target.value)}
             />
           </div>
 
@@ -88,12 +90,12 @@ export default function Login() {
             color: '#a5b4fc', fontSize: 14, fontWeight: 700,
             cursor: cargando ? 'not-allowed' : 'pointer', letterSpacing: '0.02em',
           }}>
-            {cargando ? 'Ingresando…' : 'Ingresar'}
+            {cargando ? 'Verificando…' : 'Ingresar'}
           </button>
         </form>
 
         <div style={{ marginTop: 24, textAlign: 'center', fontSize: 11, color: 'rgba(255,255,255,0.2)' }}>
-          Usa tu cuenta de Statia Go
+          Usa tu usuario y contraseña de Statia Go
         </div>
       </div>
     </div>
