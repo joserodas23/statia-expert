@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;600&family=DM+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  background: #0d0f14;
+  color: #e2e8f0;
+  font-family: 'DM Mono', 'Courier New', monospace;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.react-flow__background { background-color: #0d0f14; }
+.react-flow__edge-path { stroke: rgba(99,102,241,0.5) !important; stroke-width: 2 !important; }
+.react-flow__handle { background: #6366f1 !important; border-color: #a5b4fc !important; width: 10px !important; height: 10px !important; }
+.react-flow__controls { background: #13161d !important; border: 1px solid rgba(255,255,255,0.08) !important; border-radius: 10px !important; }
+.react-flow__controls-button { background: #13161d !important; border-color: rgba(255,255,255,0.08) !important; color: #a5b4fc !important; fill: #a5b4fc !important; }
