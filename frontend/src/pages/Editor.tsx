@@ -13,6 +13,7 @@ import IntermediateNode from '../components/nodes/IntermediateNode';
 import { useStore } from '../store/useStore';
 import type { Sesion } from '../lib/auth';
 import { inferirCrispApi, inferirFuzzyApi, inferirBayesianoApi } from '../api';
+import AdminPanel from '../components/AdminPanel';
 
 const nodeTypes = { variable: VariableNode, regla: RuleNode, output: OutputNode, intermedio: IntermediateNode };
 
@@ -104,6 +105,7 @@ export default function Editor({ usuario, onCerrarSesion }: { usuario: Sesion; o
   const [cargando, setCargando]  = useState(false);
   const [panelAbierto, setPanelAbierto] = useState<'variables' | 'reglas' | 'consulta' | null>('consulta');
   const [inferenciaDone, setInferenciaDone] = useState(false);
+  const [adminPanel, setAdminPanel] = useState(false);
 
   if (!modeloActual) return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', color: 'rgba(255,255,255,0.3)', fontSize: 13 }}>
@@ -423,6 +425,13 @@ export default function Editor({ usuario, onCerrarSesion }: { usuario: Sesion; o
 
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 8, alignItems: 'center' }}>
           <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.2)' }}>@{usuario.username}</span>
+          {usuario.rol === 'super_admin' && (
+            <button onClick={() => setAdminPanel(true)} style={{
+              fontSize: 11, padding: '5px 10px', borderRadius: 8, cursor: 'pointer',
+              background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.3)',
+              color: '#a5b4fc', fontWeight: 600,
+            }}>⊙ Admin</button>
+          )}
           <button onClick={onCerrarSesion} title="Cerrar sesión"
             style={{ fontSize: 11, padding: '5px 10px', borderRadius: 8, cursor: 'pointer',
                      background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)',
@@ -488,6 +497,7 @@ export default function Editor({ usuario, onCerrarSesion }: { usuario: Sesion; o
           )}
         </div>
       </div>
+      {adminPanel && <AdminPanel onClose={() => setAdminPanel(false)} />}
     </div>
   );
 }

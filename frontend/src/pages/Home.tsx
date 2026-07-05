@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Sesion } from '../lib/auth';
 import { useStore } from '../store/useStore';
+import AdminPanel from '../components/AdminPanel';
 
 const MOTORES = [
   { id: 'crisp',     icon: '⚡', label: 'Reglas clásicas', desc: 'IF-THEN con certeza. Preciso y explicable.' },
@@ -533,6 +534,7 @@ export default function Home({ usuario, onCerrarSesion }: { usuario: Sesion; onC
   const [modal, setModal] = useState(false);
   const [form, setForm] = useState({ nombre: '', descripcion: '', tipo_motor: 'crisp' as any, dominio: '' });
   const [errorNombre, setErrorNombre] = useState(false);
+  const [adminPanel, setAdminPanel] = useState(false);
 
   const crearModelo = () => {
     if (!form.nombre.trim()) { setErrorNombre(true); return; }
@@ -571,6 +573,15 @@ export default function Home({ usuario, onCerrarSesion }: { usuario: Sesion; onC
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)' }}>@{usuario.username}</span>
+            {usuario.rol === 'super_admin' && (
+              <button onClick={() => setAdminPanel(true)} style={{
+                background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.3)',
+                color: '#a5b4fc', borderRadius: 8, padding: '7px 13px',
+                cursor: 'pointer', fontSize: 11, fontWeight: 600,
+              }}>
+                ⊙ Admin
+              </button>
+            )}
             <button onClick={onCerrarSesion}
               style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)',
                        color: 'rgba(255,255,255,0.4)', borderRadius: 8, padding: '7px 13px',
@@ -654,6 +665,8 @@ export default function Home({ usuario, onCerrarSesion }: { usuario: Sesion; onC
       </div>
 
       {/* Modal nuevo modelo */}
+      {adminPanel && <AdminPanel onClose={() => setAdminPanel(false)} />}
+
       {modal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex',
                       alignItems: 'center', justifyContent: 'center', zIndex: 50 }}
