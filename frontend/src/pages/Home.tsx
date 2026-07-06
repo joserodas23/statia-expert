@@ -558,42 +558,84 @@ export default function Home({ usuario, onCerrarSesion }: { usuario: Sesion; onC
   };
   const labelStyle = { fontSize: 10, color: 'rgba(255,255,255,0.4)', marginBottom: 5, display: 'block', textTransform: 'uppercase' as const, letterSpacing: '0.08em' };
 
+  const ECOSISTEMA = [
+    { emoji: '🎓', label: 'Statia Go',     color: '#4fffb0', bg: 'rgba(79,255,176,',  url: 'https://statia-go.vercel.app' },
+    { emoji: '🔬', label: 'Observa',       color: '#a5b4fc', bg: 'rgba(99,102,241,',  url: 'https://statia-observa.vercel.app' },
+    { emoji: '📊', label: 'Statia Pro',    color: '#6699ff', bg: 'rgba(102,153,255,', url: 'https://statia-pro.vercel.app' },
+    { emoji: '🌐', label: 'Statia Web',    color: '#38bdf8', bg: 'rgba(56,189,248,',  url: 'https://statiards.netlify.app' },
+  ];
+
   return (
-    <div style={{ minHeight: '100vh', background: '#0d0f14', color: '#f1f5f9', fontFamily: 'DM Sans, sans-serif' }}>
-      {/* Header */}
-      <div style={{ padding: '32px 40px 0', maxWidth: 900, margin: '0 auto' }}>
+    <div style={{ minHeight: '100vh', background: '#0d0f14', color: '#f1f5f9', fontFamily: 'DM Sans, sans-serif', display: 'flex' }}>
+
+      {/* ── Barra lateral ── */}
+      <aside style={{ width: 196, flexShrink: 0, background: '#0b0d14', borderRight: '1px solid rgba(255,255,255,0.07)', display: 'flex', flexDirection: 'column', padding: '22px 12px 16px' }}>
+        {/* Logo */}
+        <div style={{ marginBottom: 24, paddingLeft: 4 }}>
+          <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: 15, color: '#f1f5f9', display: 'flex', alignItems: 'center', gap: 7 }}>
+            <span style={{ fontSize: 18 }}>🏅</span> Statia Expert
+          </div>
+          <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.28)', marginTop: 3, paddingLeft: 1 }}>Inferencia · Reglas · Difuso · Bayes</div>
+        </div>
+
+        {/* Ecosistema */}
+        <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 8, paddingLeft: 4 }}>🌐 Ecosistema Statia</div>
+
+        {/* Expert — activo */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '7px 10px', background: 'rgba(251,146,60,0.1)', border: '1px solid rgba(251,146,60,0.3)', borderRadius: 10, marginBottom: 4 }}>
+          <span style={{ fontSize: 13 }}>🏅</span>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: '#fb923c' }}>Expert</div>
+            <div style={{ fontSize: 9, color: 'rgba(251,146,60,0.5)' }}>activo</div>
+          </div>
+        </div>
+
+        {/* Otras apps */}
+        {ECOSISTEMA.map(app => (
+          <a key={app.url} href={app.url} target="_blank" rel="noopener noreferrer"
+            style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '7px 10px', background: `${app.bg}0.06)`, border: `1px solid ${app.bg}0.18)`, borderRadius: 10, marginBottom: 4, textDecoration: 'none', transition: 'border-color 0.2s' }}
+            onMouseEnter={e => (e.currentTarget.style.borderColor = `${app.bg}0.45)`)}
+            onMouseLeave={e => (e.currentTarget.style.borderColor = `${app.bg}0.18)`)}>
+            <span style={{ fontSize: 13 }}>{app.emoji}</span>
+            <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+              <div style={{ fontSize: 11, fontWeight: 600, color: app.color, whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{app.label} →</div>
+            </div>
+          </a>
+        ))}
+
+        <div style={{ flex: 1 }} />
+
+        {/* Usuario */}
+        <div style={{ padding: '10px 10px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 10 }}>
+          <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', marginBottom: 6, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>@{usuario.username}</div>
+          {usuario.rol === 'super_admin' && (
+            <button onClick={() => setAdminPanel(true)} style={{ width: '100%', marginBottom: 5, background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.3)', color: '#a5b4fc', borderRadius: 7, padding: '5px 0', cursor: 'pointer', fontSize: 10, fontWeight: 600 }}>
+              ⊙ Admin
+            </button>
+          )}
+          <button onClick={onCerrarSesion} style={{ width: '100%', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.35)', borderRadius: 7, padding: '5px 0', cursor: 'pointer', fontSize: 10 }}>
+            Salir
+          </button>
+        </div>
+      </aside>
+
+      {/* ── Contenido principal ── */}
+      <div style={{ flex: 1, overflow: 'auto' }}>
+      <div style={{ padding: '32px 40px 0', maxWidth: 860 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 40 }}>
           <div>
-            <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: 26, color: '#f1f5f9' }}>
-              🧠 Statia Expert
+            <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: 22, color: '#f1f5f9' }}>
+              Sistema de inferencia
             </div>
             <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', marginTop: 3 }}>
-              Sistema de inferencia visual — Reglas · Difuso · Bayesiano
+              Reglas clásicas · Lógica difusa · Bayesiano
             </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)' }}>@{usuario.username}</span>
-            {usuario.rol === 'super_admin' && (
-              <button onClick={() => setAdminPanel(true)} style={{
-                background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.3)',
-                color: '#a5b4fc', borderRadius: 8, padding: '7px 13px',
-                cursor: 'pointer', fontSize: 11, fontWeight: 600,
-              }}>
-                ⊙ Admin
-              </button>
-            )}
-            <button onClick={onCerrarSesion}
-              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)',
-                       color: 'rgba(255,255,255,0.4)', borderRadius: 8, padding: '7px 13px',
-                       cursor: 'pointer', fontSize: 11 }}>
-              Salir
-            </button>
-            <button onClick={() => setModal(true)}
-              style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', border: 'none', color: '#fff',
-                       borderRadius: 12, padding: '11px 22px', cursor: 'pointer', fontSize: 13, fontWeight: 600 }}>
-              + Nuevo modelo
-            </button>
-          </div>
+          <button onClick={() => setModal(true)}
+            style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', border: 'none', color: '#fff',
+                     borderRadius: 12, padding: '11px 22px', cursor: 'pointer', fontSize: 13, fontWeight: 600 }}>
+            + Nuevo modelo
+          </button>
         </div>
 
         {/* Motores */}
@@ -663,6 +705,7 @@ export default function Home({ usuario, onCerrarSesion }: { usuario: Sesion; onC
           </div>
         </section>
       </div>
+      </div>{/* fin contenido principal */}
 
       {/* Modal nuevo modelo */}
       {adminPanel && <AdminPanel onClose={() => setAdminPanel(false)} />}
