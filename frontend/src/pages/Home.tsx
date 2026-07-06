@@ -535,7 +535,8 @@ export default function Home({ usuario, onCerrarSesion }: { usuario: Sesion; onC
   const [form, setForm] = useState({ nombre: '', descripcion: '', tipo_motor: 'crisp' as any, dominio: '' });
   const [errorNombre, setErrorNombre] = useState(false);
   const [adminPanel, setAdminPanel] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [aboutOpen,   setAboutOpen]   = useState(false);
 
   const crearModelo = () => {
     if (!form.nombre.trim()) { setErrorNombre(true); return; }
@@ -570,7 +571,7 @@ export default function Home({ usuario, onCerrarSesion }: { usuario: Sesion; onC
     <div style={{ minHeight: '100vh', background: '#0d0f14', color: '#f1f5f9', fontFamily: 'DM Sans, sans-serif', display: 'flex' }}>
 
       {/* ── Barra lateral ── */}
-      <aside style={{ width: sidebarOpen ? 196 : 0, flexShrink: 0, background: '#0b0d14', borderRight: sidebarOpen ? '1px solid rgba(255,255,255,0.07)' : 'none', display: 'flex', flexDirection: 'column', padding: sidebarOpen ? '22px 12px 16px' : '0', overflow: 'hidden', transition: 'width 0.25s ease, padding 0.25s ease' }}>
+      <aside style={{ width: sidebarOpen ? 210 : 0, minHeight: '100vh', flexShrink: 0, background: '#0b0d14', borderRight: sidebarOpen ? '1px solid rgba(255,255,255,0.07)' : 'none', display: 'flex', flexDirection: 'column', padding: sidebarOpen ? '20px 14px 16px' : '0', overflow: 'hidden', transition: 'width 0.3s cubic-bezier(0.4,0,0.2,1), padding 0.3s cubic-bezier(0.4,0,0.2,1)', opacity: sidebarOpen ? 1 : 0 }}>
         {/* Logo */}
         <div style={{ marginBottom: 24, paddingLeft: 4, whiteSpace: 'nowrap' }}>
           <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: 15, color: '#f1f5f9', display: 'flex', alignItems: 'center', gap: 7 }}>
@@ -606,6 +607,15 @@ export default function Home({ usuario, onCerrarSesion }: { usuario: Sesion; onC
 
         <div style={{ flex: 1 }} />
 
+        {/* Acerca de */}
+        <button onClick={() => setAboutOpen(true)}
+          style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 8, padding: '7px 10px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 10, marginBottom: 8, cursor: 'pointer', textAlign: 'left', whiteSpace: 'nowrap' }}
+          onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.07)')}
+          onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.03)')}>
+          <span style={{ fontSize: 13 }}>ℹ️</span>
+          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)', fontWeight: 500 }}>Acerca de</span>
+        </button>
+
         {/* Usuario */}
         <div style={{ padding: '10px 10px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 10, whiteSpace: 'nowrap' }}>
           <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', marginBottom: 6, overflow: 'hidden', textOverflow: 'ellipsis' }}>@{usuario.username}</div>
@@ -621,15 +631,13 @@ export default function Home({ usuario, onCerrarSesion }: { usuario: Sesion; onC
       </aside>
 
       {/* ── Contenido principal ── */}
-      <div style={{ flex: 1, overflow: 'auto' }}>
-      <div style={{ padding: '32px 40px 0', maxWidth: 860 }}>
+      <div style={{ flex: 1, overflow: 'auto', minHeight: '100vh' }}>
+      <div style={{ padding: '36px 48px 60px', maxWidth: 1000, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 40 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <button onClick={() => setSidebarOpen(v => !v)}
-              title={sidebarOpen ? 'Ocultar menú' : 'Mostrar menú'}
-              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)', borderRadius: 8, width: 34, height: 34, cursor: 'pointer', fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'background 0.15s' }}
-              onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.1)')}
-              onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.05)')}>
+              title={sidebarOpen ? 'Ocultar menú' : 'Menú'}
+              style={{ background: sidebarOpen ? 'rgba(255,255,255,0.05)' : 'rgba(251,146,60,0.1)', border: `1px solid ${sidebarOpen ? 'rgba(255,255,255,0.1)' : 'rgba(251,146,60,0.35)'}`, color: sidebarOpen ? 'rgba(255,255,255,0.5)' : '#fb923c', borderRadius: 8, width: 34, height: 34, cursor: 'pointer', fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'all 0.2s' }}>
               {sidebarOpen ? '◀' : '☰'}
             </button>
             <div>
@@ -719,6 +727,69 @@ export default function Home({ usuario, onCerrarSesion }: { usuario: Sesion; onC
 
       {/* Modal nuevo modelo */}
       {adminPanel && <AdminPanel onClose={() => setAdminPanel(false)} />}
+
+      {/* Modal Acerca de */}
+      {aboutOpen && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', display: 'flex',
+                      alignItems: 'flex-end', justifyContent: 'center', zIndex: 60 }}
+          onClick={e => e.target === e.currentTarget && setAboutOpen(false)}>
+          <div style={{ background: '#131720', borderRadius: '20px 20px 0 0', padding: '28px 24px 40px',
+                        width: '100%', maxWidth: 480, borderTop: '1px solid rgba(251,146,60,0.25)',
+                        animation: 'fadeUp 0.28s ease' }}>
+
+            {/* Logo */}
+            <div style={{ textAlign: 'center', marginBottom: 22 }}>
+              <div style={{ width: 62, height: 62, background: 'linear-gradient(135deg,#0d0f14,#131720)',
+                            border: '1px solid rgba(251,146,60,0.35)', borderRadius: 16,
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            margin: '0 auto 12px', boxShadow: '0 0 28px rgba(251,146,60,0.12)' }}>
+                <span style={{ fontSize: 30 }}>🏅</span>
+              </div>
+              <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: 22, color: '#f1f5f9' }}>
+                Statia <span style={{ color: '#fb923c' }}>Expert</span>
+              </div>
+              <div style={{ fontFamily: 'DM Mono, monospace', fontSize: 11, color: 'rgba(255,255,255,0.35)', marginTop: 4 }}>
+                Inferencia · Reglas · Lógica Difusa · Bayesiano
+              </div>
+            </div>
+
+            {/* Desarrollador */}
+            <div style={{ background: 'linear-gradient(135deg,rgba(251,146,60,0.09),rgba(251,146,60,0.03))',
+                          border: '1px solid rgba(251,146,60,0.22)', borderRadius: 14, padding: '16px 18px', marginBottom: 12 }}>
+              <div style={{ fontSize: 9, fontWeight: 700, color: 'rgba(251,146,60,0.6)', letterSpacing: '0.1em',
+                            textTransform: 'uppercase', marginBottom: 10 }}>Desarrollador</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{ width: 40, height: 40, background: 'rgba(251,146,60,0.15)', border: '2px solid rgba(251,146,60,0.35)',
+                              borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              fontSize: 18, flexShrink: 0 }}>👨‍💻</div>
+                <div>
+                  <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: 15, color: '#f1f5f9' }}>
+                    José Luis Rodas Cobos
+                  </div>
+                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.38)', marginTop: 2 }}>
+                    Creador del ecosistema Statia · Perú 🇵🇪
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Copyright */}
+            <div style={{ fontFamily: 'DM Mono, monospace', fontSize: 11, color: 'rgba(255,255,255,0.2)',
+                          textAlign: 'center', lineHeight: 1.8, marginBottom: 16 }}>
+              Hecho con ❤️ para docentes y estudiantes universitarios<br/>
+              <span style={{ color: 'rgba(251,146,60,0.4)' }}>© 2026 Jose Rodas — Statia Expert</span>
+            </div>
+
+            <button onClick={() => setAboutOpen(false)}
+              style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.05)',
+                       border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10,
+                       color: 'rgba(255,255,255,0.45)', fontFamily: 'DM Mono, monospace',
+                       fontSize: 12, cursor: 'pointer' }}>
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
 
       {modal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex',
