@@ -764,7 +764,7 @@ export default function Home({ usuario, onCerrarSesion }: { usuario: Sesion; onC
                               fontSize: 18, flexShrink: 0 }}>👨‍💻</div>
                 <div>
                   <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: 15, color: '#f1f5f9' }}>
-                    José Luis Rodas Cobos
+                    Rodas Cobos Jose Luis
                   </div>
                   <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.38)', marginTop: 2 }}>
                     Creador del ecosistema Statia · Perú 🇵🇪
