@@ -356,7 +356,22 @@ export default function Editor({ usuario, onCerrarSesion }: { usuario: Sesion; o
         } else {
           res = await inferirBayesianoApi(hechosNum, modeloActual.variables, modeloActual.clases || []);
         }
-        const nuevosResultados = res.resultados || [];
+        let nuevosResultados: any[] = res.resultados || [];
+        if ((modeloActual as any).usar_mycin && modeloActual.tipo_motor === 'crisp') {
+          const m = new Map<string, { certeza: number; explicacion: string }>();
+          for (const r of nuevosResultados) {
+            if (!m.has(r.conclusion)) {
+              m.set(r.conclusion, { certeza: r.certeza, explicacion: r.explicacion ?? '' });
+            } else {
+              const p = m.get(r.conclusion)!;
+              p.certeza = p.certeza + r.certeza * (1 - p.certeza);
+              if (r.explicacion) p.explicacion = p.explicacion ? `${p.explicacion}; ${r.explicacion}` : r.explicacion;
+            }
+          }
+          nuevosResultados = [...m.entries()]
+            .map(([conclusion, v]) => ({ conclusion, certeza: parseFloat(v.certeza.toFixed(4)), explicacion: v.explicacion }))
+            .sort((a: any, b: any) => b.certeza - a.certeza);
+        }
         setResultados(nuevosResultados);
         setInferenciaDone(true);
         const firedMap = detectarReglasFired(modeloActual.reglas || [], hechosNum, nuevosResultados, modeloActual.tipo_motor);
