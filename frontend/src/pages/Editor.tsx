@@ -391,6 +391,13 @@ export default function Editor({ usuario, onCerrarSesion }: { usuario: Sesion; o
     if (Object.keys(hechos).length > 0) ejecutarConsulta();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Re-ejecutar automáticamente cuando cambian los hechos (solo si ya se ejecutó una vez)
+  useEffect(() => {
+    if (!inferenciaDone || Object.keys(hechos).length === 0) return;
+    const t = setTimeout(() => ejecutarConsulta(), 200);
+    return () => clearTimeout(t);
+  }, [hechos]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const motorLabel: Record<string, string> = {
     crisp: '⚡ Reglas clásicas', difuso: '🌊 Lógica difusa', bayesiano: '📊 Bayesiano', capas: '🔗 Capas encadenadas',
   };
